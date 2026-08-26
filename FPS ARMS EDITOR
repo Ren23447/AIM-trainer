@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIMTRAINER // FPS ARMS EDITOR</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#080b0e;color:#eaf0f4;font:13px Segoe UI,Arial,sans-serif}body{display:grid;grid-template-columns:330px 1fr}.panel{padding:22px;background:#0d1318;border-right:1px solid #26323b;overflow:auto}.brand{font-weight:900;letter-spacing:3px;color:#ffcc00;font-size:18px}.brand b{display:block;color:#fff;font-size:24px;margin-top:3px}.sub{color:#84919b;font-size:10px;letter-spacing:2px;margin:6px 0 24px}.group{border-top:1px solid #26323b;padding-top:14px;margin-top:18px}.group h2{font-size:11px;letter-spacing:2px;color:#ffcc00;margin:0 0 10px}.row{display:grid;grid-template-columns:45px 1fr 76px;align-items:center;gap:8px;margin:9px 0;color:#aebbc4}.row label{font-family:monospace;color:#fff}.row input[type=range]{width:100%;accent-color:#ffb900}.row input[type=number]{width:76px;background:#111a20;border:1px solid #3b4a55;color:#fff;padding:6px;border-radius:3px}.file{display:block;width:100%;margin:8px 0;padding:9px;background:#111a20;border:1px dashed #53636e;color:#bfcbd2;font-size:11px}.button{width:100%;padding:11px;margin-top:8px;border:1px solid #ffdc5b;background:linear-gradient(#ffdc4c,#e8aa00);color:#000;font-weight:900;letter-spacing:1px;cursor:pointer}.button.alt{background:#1a252c;color:#fff;border-color:#52616c}.status{font:11px monospace;color:#8fa0ab;line-height:1.5;margin-top:10px;min-height:34px}.help{color:#81909a;font-size:11px;line-height:1.5;margin-top:18px}#viewport{position:relative;min-width:0}canvas{display:block;width:100%;height:100%}.legend{position:absolute;left:18px;top:18px;background:#080b0dcc;border:1px solid #ffffff22;padding:10px 12px;color:#aebbc4;line-height:1.7}.legend b{color:#ffcc00}.error{position:absolute;left:18px;right:18px;bottom:18px;padding:12px;background:#260b10;border:1px solid #ff5265;color:#ffc4ca;font:12px monospace;white-space:pre-wrap}
+</style>
+<style>
+.library{display:grid;gap:6px}.asset{padding:9px;text-align:left;border:1px solid #3b4a55;background:#111a20;color:#dce5ea;cursor:pointer;font-size:11px}.asset:hover,.asset.active{border-color:#ffcc00;color:#ffcc00;background:#1a252c}.asset small{display:block;color:#7f8d96;margin-top:3px}
+</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<aside class="panel">
+  <div class="brand">ROTSTORM <b>ARMS EDITOR</b></div>
+  <div class="sub">UNITY-STYLE VIEW MODEL TUNER</div>
+  <div class="group"><h2>MODEL SOURCE</h2>
+    <input id="modelFile" class="file" type="file" accept=".glb,.gltf">
+    <button id="reload" class="button alt">RELOAD MODEL</button>
+  </div>
+  <div class="group"><h2>ASSET LIBRARY</h2>
+    <div class="library">
+      <button class="asset active" data-asset="manny">Manny P9 · FPS Arms<small>Current replacement model</small></button>
+      <button class="asset" data-asset="legacy">Legacy SMG · FPS Arms<small>Original game model</small></button>
+    </div>
+  </div>
+  <div class="group"><h2>POSITION</h2>
+    <div class="row"><label>X</label><input data-key="position.x" type="range" min="-3" max="3" step=".01" value="-.01"><input data-key="position.x" type="number" step=".01" value="-.01"></div>
+    <div class="row"><label>Y</label><input data-key="position.y" type="range" min="-3" max="3" step=".01" value="-.63"><input data-key="position.y" type="number" step=".01" value="-.63"></div>
+    <div class="row"><label>Z</label><input data-key="position.z" type="range" min="-3" max="3" step=".01" value="-.01"><input data-key="position.z" type="number" step=".01" value="-.01"></div>
+  </div>
+  <div class="group"><h2>ROTATION · DEGREES</h2>
+    <div class="row"><label>X</label><input data-key="rotation.x" type="range" min="-180" max="180" step="1" value="0"><input data-key="rotation.x" type="number" step="1" value="0"></div>
+    <div class="row"><label>Y</label><input data-key="rotation.y" type="range" min="-180" max="180" step="1" value="180"><input data-key="rotation.y" type="number" step="1" value="180"></div>
+    <div class="row"><label>Z</label><input data-key="rotation.z" type="range" min="-180" max="180" step="1" value="0"><input data-key="rotation.z" type="number" step="1" value="0"></div>
+  </div>
+  <div class="group"><h2>SCALE</h2>
+    <div class="row"><label>X</label><input data-key="scale.x" type="range" min=".01" max="2" step=".01" value=".35"><input data-key="scale.x" type="number" min=".01" step=".01" value=".35"></div>
+    <div class="row"><label>Y</label><input data-key="scale.y" type="range" min=".01" max="2" step=".01" value=".35"><input data-key="scale.y" type="number" min=".01" step=".01" value=".35"></div>
+    <div class="row"><label>Z</label><input data-key="scale.z" type="range" min=".01" max="2" step=".01" value=".35"><input data-key="scale.z" type="number" min=".01" step=".01" value=".35"></div>
+    <button id="uniform" class="button alt">LINK SCALE AXES</button>
+  </div>
+  <div class="group"><h2>EXPORT</h2>
+    <input id="gameFile" class="file" type="file" accept=".html,.htm">
+    <button id="export" class="button">EXPORT FIXED GAME HTML</button>
+    <div class="status" id="status">Loading the default Manny arms…</div>
+  </div>
+  <div class="help">Drag on the viewport to orbit the preview. The game HTML is optional until export: choose your current aimtrainer.html, then export writes the tuned ARMS_CONFIG into a new complete HTML file.</div>
+</aside>
+<main id="viewport"><div class="legend"><b>FPS ARMS PREVIEW</b><br>Grid = world origin · red/green/blue = XYZ<br>Animation: idle preview</div><div id="error" class="error" hidden></div></main>
+<script type="module">
+import * as THREE from "three";
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
+const MODEL_URL="https://raw.githubusercontent.com/Ren23447/AIM-trainer/refs/heads/main/p9_manny_fps_animations%20(1).glb",LEGACY_URL="https://raw.githubusercontent.com/Ren23447/Rotstorm-FPS/main/smg_fps_animations.glb";
+const cfg={position:{x:-.01,y:-.63,z:-.01},rotation:{x:0,y:180,z:0},scale:{x:.35,y:.35,z:.35}};
+const $=id=>document.getElementById(id), viewport=$("viewport"), scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(45,1,.01,100), renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setClearColor(0x101820);viewport.appendChild(renderer.domElement);scene.add(new THREE.HemisphereLight(0xddeeff,0x20252a,2));
+const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(2,4,4);scene.add(key);
+const grid=new THREE.GridHelper(8,40,0xffaa33,0x33404a);grid.position.y=-1;scene.add(grid);
+const axes=new THREE.AxesHelper(2);scene.add(axes);
+let model=null,mixer=null,clip=null,orbit={x:.15,y:0,down:false,px:0,py:0};
+function resize(){let r=viewport.getBoundingClientRect();camera.aspect=r.width/r.height;camera.updateProjectionMatrix();renderer.setSize(r.width,r.height)}addEventListener("resize",resize);resize();
+function apply(){if(!model)return;model.position.set(cfg.position.x,cfg.position.y,cfg.position.z);model.rotation.set(cfg.rotation.x*Math.PI/180,cfg.rotation.y*Math.PI/180,cfg.rotation.z*Math.PI/180);model.scale.set(cfg.scale.x,cfg.scale.y,cfg.scale.z)}
+function load(url){$("status").textContent="Loading GLB…";$("error").hidden=true;new GLTFLoader().load(url,g=>{if(model)scene.remove(model);model=g.scene;model.traverse(o=>{if(o.isMesh){o.frustumCulled=false;o.castShadow=true}});scene.add(model);mixer=new THREE.AnimationMixer(model);clip=g.animations.find(a=>a.name==="WEP_Idle")||g.animations[0];if(clip)mixer.clipAction(clip).play();apply();$("status").textContent=`Loaded successfully · ${g.animations.length} animations`;},undefined,e=>{$("status").textContent="Model failed to load";$("error").hidden=false;$("error").textContent="GLB LOAD ERROR\\n"+(e?.message||"Unknown loader error")+"\\nURL: "+url})}
+function setValue(key,value){let [group,axis]=key.split(".");cfg[group][axis]=Number(value);document.querySelectorAll(`[data-key="${key}"]`).forEach(x=>x.value=value);apply()}
+document.querySelectorAll("[data-key]").forEach(input=>input.addEventListener("input",e=>setValue(e.target.dataset.key,e.target.value)));
+$("uniform").onclick=()=>{let v=cfg.scale.x;cfg.scale.y=v;cfg.scale.z=v;["y","z"].forEach(a=>document.querySelector(`[data-key="scale.${a}"]`).value=v);apply()};
+$("reload").onclick=()=>load(activeUrl);document.querySelectorAll("[data-asset]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-asset]").forEach(x=>x.classList.remove("active"));b.classList.add("active");activeUrl=b.dataset.asset==="legacy"?LEGACY_URL:MODEL_URL;load(activeUrl)});$("modelFile").onchange=e=>{let f=e.target.files[0];if(f)load(URL.createObjectURL(f))};
+let activeUrl=MODEL_URL;
+$("gameFile").onchange=e=>{let f=e.target.files[0];if(f)$("status").textContent=`Game selected: ${f.name}`};
+$("export").onclick=async()=>{let f=$("gameFile").files[0];if(!f){$("status").textContent="Choose your current game HTML before exporting.";return}let text=await f.text(),config=`const ARMS_CONFIG={position:{x:${cfg.position.x},y:${cfg.position.y},z:${cfg.position.z}},rotation:{x:${cfg.rotation.x*Math.PI/180},y:${cfg.rotation.y*Math.PI/180},z:${cfg.rotation.z*Math.PI/180}},scale:{x:${cfg.scale.x},y:${cfg.scale.y},z:${cfg.scale.z}}};`;if(/const ARMS_CONFIG=/.test(text))text=text.replace(/const ARMS_CONFIG=.*?;/,config);else text=text.replace("<"+"/script>",config+"<"+"/script>");let blob=new Blob([text],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="aimtrainer-tuned.html";a.click();$("status").textContent="Exported aimtrainer-tuned.html"};
+viewport.addEventListener("pointerdown",e=>{orbit.down=true;orbit.px=e.clientX;orbit.py=e.clientY});addEventListener("pointerup",()=>orbit.down=false);addEventListener("pointermove",e=>{if(!orbit.down)return;orbit.y+=(e.clientX-orbit.px)*.01;orbit.x+=(e.clientY-orbit.py)*.01;orbit.px=e.clientX;orbit.py=e.clientY});
+function animate(){requestAnimationFrame(animate);if(mixer)mixer.update(.016);camera.position.set(Math.sin(orbit.y)*4,1.2+orbit.x*2,Math.cos(orbit.y)*4);camera.lookAt(0,-.15,0);renderer.render(scene,camera)}load(activeUrl);animate();
+</script>
+</body>
+</html>
